@@ -1,5 +1,4 @@
 using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -15,6 +14,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float slideTime;
     [SerializeField] private float slideCoolDownTime;
     [SerializeField] private float checkDistanceToCelling;
+    [SerializeField] private Vector2 offset1;
+    [SerializeField] private Vector2 offset2;
+    [HideInInspector] public bool edgeDetected;
     private float slideCoolDownCounter;
     private float slideTimeCounter;
     private bool _isSliding;
@@ -25,6 +27,11 @@ public class PlayerMovement : MonoBehaviour
     private bool _canDoubleJump;
     private bool _isWallDetected;
     private bool _isCellingDetected;
+    private Vector2 climbBegunPosition;
+    private Vector2 climbOverPosition;
+    private bool _canGrabEdge = true;
+    private bool _CanClimb;
+
 
 
     private void Start()
@@ -41,14 +48,42 @@ public class PlayerMovement : MonoBehaviour
         PlayerJump();
         PlayerSliding();
         CheckForSlide();
+        checkForEdge();
         if (_isGrounded)
         {
             _canDoubleJump = true;
         }
 
     }
+    private void checkForEdge()
+    {
+        Debug.Log(edgeDetected);
+        if (edgeDetected && _canGrabEdge)
+        {
 
+            _canGrabEdge = false;
+            Vector2 ledgePosition = GetComponentInChildren<EdgeDetection>().transform.position;
+            climbBegunPosition = ledgePosition + offset1;
+            climbOverPosition = ledgePosition + offset2;
+            _CanClimb = true;
+        }
+        if (_CanClimb)
+        {
+            transform.position = climbBegunPosition;
+        }
+    }
+    private void EdgeClimbingOver()
+    {
+        _CanClimb = false;
+        transform.position = climbOverPosition;
+        Invoke(nameof(AllowEdgeGrab), 1f);
 
+    }
+
+    private void AllowEdgeGrab()
+    {
+        _canGrabEdge = true;
+    }
 
     private void PlayerJump()
     {
@@ -56,6 +91,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+
             JumpButton();
         }
     }
@@ -111,7 +147,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void CheckForSlide()
     {
-        Debug.Log(slideTimeCounter);
+        //  Debug.Log(slideTimeCounter);
         if (slideTimeCounter < 0 && !_isCellingDetected)
         {
             _isSliding = false;
@@ -144,6 +180,7 @@ public class PlayerMovement : MonoBehaviour
         _playeranimator.SetBool("CanDoubbleJump", _canDoubleJump);
         _playeranimator.SetBool("IsGrounded", _isGrounded);
         _playeranimator.SetBool("IsSliding", _isSliding);
+        _playeranimator.SetBool("CanClimb", _CanClimb);
 
 
     }
