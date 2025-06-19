@@ -1,8 +1,11 @@
 using System;
+using UnityEditor.Callbacks;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    [Header("Camera")]
+    [SerializeField] private Camera cam;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
     [SerializeField] private float doubleJumpForce;
@@ -16,6 +19,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float checkDistanceToCelling;
     [SerializeField] private Vector2 offset1;
     [SerializeField] private Vector2 offset2;
+    [SerializeField] private float maxSpeed;
+    [SerializeField] private float speedMultiplier;
+    [Space]
+    [SerializeField] private float mileStoneIncreaser;
+
     [HideInInspector] public bool edgeDetected;
     private float slideCoolDownCounter;
     private float slideTimeCounter;
@@ -31,6 +39,9 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 climbOverPosition;
     private bool _canGrabEdge = true;
     private bool _CanClimb;
+    private float speedMileStone;
+    private float defaultSpeed;
+    private float defaultMilstoneIncreaser;
 
 
 
@@ -38,6 +49,9 @@ public class PlayerMovement : MonoBehaviour
     {
         playerRb = GetComponent<Rigidbody2D>();
         _playeranimator = GetComponent<Animator>();
+        speedMileStone = mileStoneIncreaser;
+        defaultSpeed = moveSpeed;
+        defaultMilstoneIncreaser = mileStoneIncreaser;
     }
     private void Update()
     {
@@ -49,19 +63,53 @@ public class PlayerMovement : MonoBehaviour
         PlayerSliding();
         CheckForSlide();
         checkForEdge();
+        SpeedController();
         if (_isGrounded)
         {
             _canDoubleJump = true;
         }
+    }
+    private void speedReset()
+    {
+        moveSpeed = defaultSpeed;
+        mileStoneIncreaser = defaultMilstoneIncreaser;
+    }
 
+    private void SpeedController()
+    {
+        if (moveSpeed == maxSpeed)
+            return;
+        if (transform.position.x > speedMileStone)
+        {
+            //  SetRandomBGColor();
+            speedMileStone += mileStoneIncreaser;
+            moveSpeed *= speedMultiplier;
+            mileStoneIncreaser *= speedMultiplier;
+            if (moveSpeed > maxSpeed)
+            {
+                moveSpeed = maxSpeed;
+            }
+        }
+
+    }
+
+    private void SetRandomBGColor()
+    {
+        Color randomColor = new Color(
+            UnityEngine.Random.Range(0f, 1f), // red
+            UnityEngine.Random.Range(0f, 1f), // green
+            UnityEngine.Random.Range(0f, 1f) // blue
+        );
+        cam.backgroundColor = randomColor;
     }
     private void checkForEdge()
     {
-        Debug.Log(edgeDetected);
+        // Debug.Log(edgeDetected);
         if (edgeDetected && _canGrabEdge)
         {
 
             _canGrabEdge = false;
+            playerRb.gravityScale = 0f;
             Vector2 ledgePosition = GetComponentInChildren<EdgeDetection>().transform.position;
             climbBegunPosition = ledgePosition + offset1;
             climbOverPosition = ledgePosition + offset2;
@@ -75,6 +123,7 @@ public class PlayerMovement : MonoBehaviour
     private void EdgeClimbingOver()
     {
         _CanClimb = false;
+        playerRb.gravityScale = 5f;
         transform.position = climbOverPosition;
         Invoke(nameof(AllowEdgeGrab), 1f);
 
@@ -128,14 +177,20 @@ public class PlayerMovement : MonoBehaviour
             _startPlayerRunning = true;
         }
 
-        if (_startPlayerRunning && !_isWallDetected)
+        if (_startPlayerRunning)
         {
+            if (_isWallDetected)
+            {
+                speedReset();
+                return;
+            }
             Movement();
         }
     }
 
     private void Movement()
     {
+
         if (_isSliding)
         {
             playerRb.linearVelocity = new Vector2(slidingSpeed, playerRb.linearVelocity.y);
@@ -182,7 +237,16 @@ public class PlayerMovement : MonoBehaviour
         _playeranimator.SetBool("IsSliding", _isSliding);
         _playeranimator.SetBool("CanClimb", _CanClimb);
 
+        if (playerRb.linearVelocity.y < -25)
+        {
+            _playeranimator.SetBool("CanRoll", true);
+        }
 
+
+    }
+    private void RollAnimationFinished()
+    {
+        _playeranimator.SetBool("CanRoll", false);
     }
     void OnDrawGizmos()
     {

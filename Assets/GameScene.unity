@@ -21336,6 +21336,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 890b9c71932a4b04383b78e4597e2c87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cam: {fileID: 2015865633}
   moveSpeed: 12
   jumpForce: 18
   doubleJumpForce: 13
@@ -21351,6 +21352,9 @@ MonoBehaviour:
   checkDistanceToCelling: 2
   offset1: {x: -0.54, y: -1.32}
   offset2: {x: 0.77, y: 1.236}
+  maxSpeed: 20
+  speedMultiplier: 1.15
+  mileStoneIncreaser: 100
   edgeDetected: 0
 --- !u!70 &1889546811
 CapsuleCollider2D:
@@ -22527,6 +22531,7 @@ MonoBehaviour:
   - {fileID: 2257918687326224635, guid: fabb4ae61b341c4448f7c1ad088cfe23, type: 3}
   - {fileID: 2257918687326224635, guid: 84167d7d52350e5439c200296ef3e9c4, type: 3}
   - {fileID: 2257918687326224635, guid: ab77336bc0da52f469295a94056d7998, type: 3}
+  - {fileID: 2257918687326224635, guid: f75ca6470af0f074590e581a715e3223, type: 3}
   nextPartPosition: {x: 0, y: 0, z: 0}
   distanceToSpawn: 50
   distanceToDespawn: 50
