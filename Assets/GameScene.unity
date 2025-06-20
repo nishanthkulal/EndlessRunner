@@ -21352,7 +21352,7 @@ MonoBehaviour:
   checkDistanceToCelling: 2
   offset1: {x: -0.54, y: -1.32}
   offset2: {x: 0.77, y: 1.236}
-  maxSpeed: 20
+  maxSpeed: 18
   speedMultiplier: 1.15
   mileStoneIncreaser: 100
   edgeDetected: 0

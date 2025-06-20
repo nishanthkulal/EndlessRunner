@@ -72,6 +72,7 @@ public class PlayerMovement : MonoBehaviour
     private void speedReset()
     {
         moveSpeed = defaultSpeed;
+
         mileStoneIncreaser = defaultMilstoneIncreaser;
     }
 
@@ -124,6 +125,7 @@ public class PlayerMovement : MonoBehaviour
     {
         _CanClimb = false;
         playerRb.gravityScale = 5f;
+        // _canDoubleJump = false;
         transform.position = climbOverPosition;
         Invoke(nameof(AllowEdgeGrab), 1f);
 
@@ -237,7 +239,7 @@ public class PlayerMovement : MonoBehaviour
         _playeranimator.SetBool("IsSliding", _isSliding);
         _playeranimator.SetBool("CanClimb", _CanClimb);
 
-        if (playerRb.linearVelocity.y < -25)
+        if (playerRb.linearVelocity.y < -20)
         {
             _playeranimator.SetBool("CanRoll", true);
         }

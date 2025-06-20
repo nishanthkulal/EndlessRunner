@@ -597,6 +597,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: CanClimb
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: CanRoll
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 7951341099145766788}
   m_Solo: 0
