@@ -24,6 +24,10 @@ public class PlayerMovement : MonoBehaviour
     [Space]
     [SerializeField] private float mileStoneIncreaser;
 
+    [Space]
+    [SerializeField] private Vector2 knockBackDirection;
+
+
     [HideInInspector] public bool edgeDetected;
     private float slideCoolDownCounter;
     private float slideTimeCounter;
@@ -42,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
     private float speedMileStone;
     private float defaultSpeed;
     private float defaultMilstoneIncreaser;
+    private bool _isKnockedBack;
 
 
 
@@ -58,6 +63,14 @@ public class PlayerMovement : MonoBehaviour
         slideTimeCounter -= Time.deltaTime;
         slideCoolDownCounter -= Time.deltaTime;
         AnimatorController();
+        WallDetection();
+
+        if (_isKnockedBack)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.K))
+            KnockBack();
+
         PlayerMov();
         PlayerJump();
         PlayerSliding();
@@ -68,6 +81,16 @@ public class PlayerMovement : MonoBehaviour
         {
             _canDoubleJump = true;
         }
+    }
+
+    private void KnockBack()
+    {
+        _isKnockedBack = true;
+        playerRb.linearVelocity = knockBackDirection;
+    }
+    private void ChancelKnockBack()
+    {
+        _isKnockedBack = false;
     }
     private void speedReset()
     {
@@ -238,6 +261,7 @@ public class PlayerMovement : MonoBehaviour
         _playeranimator.SetBool("IsGrounded", _isGrounded);
         _playeranimator.SetBool("IsSliding", _isSliding);
         _playeranimator.SetBool("CanClimb", _CanClimb);
+        _playeranimator.SetBool("IsKnocked", _isKnockedBack);
 
         if (playerRb.linearVelocity.y < -20)
         {

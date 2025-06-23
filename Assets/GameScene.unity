@@ -21355,6 +21355,7 @@ MonoBehaviour:
   maxSpeed: 18
   speedMultiplier: 1.15
   mileStoneIncreaser: 100
+  knockBackDirection: {x: -30, y: 8}
   edgeDetected: 0
 --- !u!70 &1889546811
 CapsuleCollider2D:
@@ -22525,12 +22526,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelParts:
-  - {fileID: 2257918687326224635, guid: e9eaf1316e75e9b40b49d3887b96d2b6, type: 3}
-  - {fileID: 2257918687326224635, guid: b6e906e51ed19bb4787be451c21a4626, type: 3}
-  - {fileID: 2257918687326224635, guid: 28c11e9924bf33c498a04873010fee85, type: 3}
-  - {fileID: 2257918687326224635, guid: fabb4ae61b341c4448f7c1ad088cfe23, type: 3}
-  - {fileID: 2257918687326224635, guid: 84167d7d52350e5439c200296ef3e9c4, type: 3}
-  - {fileID: 2257918687326224635, guid: ab77336bc0da52f469295a94056d7998, type: 3}
   - {fileID: 2257918687326224635, guid: f75ca6470af0f074590e581a715e3223, type: 3}
   nextPartPosition: {x: 0, y: 0, z: 0}
   distanceToSpawn: 50
